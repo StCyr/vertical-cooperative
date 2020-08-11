@@ -7,7 +7,11 @@ from odoo.http import request
 from odoo.tools.translate import _
 
 # Only use for behavior, don't stock it
-_TECHNICAL = ["view_from", "view_callback"]
+_TECHNICAL = [
+    "view_from",
+    "view_callback",
+]
+
 # Allow in description
 _BLACKLIST = [
     "id",
@@ -27,7 +31,8 @@ _COOP_FORM_FIELD = [
     "birthdate",
     "iban",
     "share_product_id",
-    "address",
+    "street_name",
+    "street_number",
     "city",
     "zip_code",
     "country_id",
@@ -50,7 +55,8 @@ _COMPANY_FORM_FIELD = [
     "birthdate",
     "iban",
     "share_product_id",
-    "address",
+    "street_name",
+    "street_number",
     "city",
     "zip_code",
     "country_id",

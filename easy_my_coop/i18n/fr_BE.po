@@ -2262,7 +2262,7 @@ msgstr ""
 #: code:addons/coopiteasy/vertical-cooperative/easy_my_coop/models/coop.py:427
 #: code:addons/easy_my_coop/models/coop.py:427
 #, python-format
-msgid "You must set a cooperator account on you company."
+msgid "You must set a cooperator account on your company."
 msgstr ""
 
 #. module: easy_my_coop

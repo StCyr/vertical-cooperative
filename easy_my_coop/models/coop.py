@@ -11,12 +11,15 @@ from addons.base_iban.models.res_partner_bank import validate_iban
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 
+
+# This list is only used in easy_my_coop_website's controller
 _REQUIRED = [
     "email",
     "firstname",
     "lastname",
     "birthdate",
-    "address",
+    "street_name",
+    "street_number",
     "share_product_id",
     "ordered_parts",
     "zip_code",
@@ -37,6 +40,7 @@ class SubscriptionRequest(models.Model):
     _name = "subscription.request"
     _description = "Subscription Request"
 
+    # This function is only used in easy_my_coope_website's controller
     def get_required_field(self):
         required_fields = _REQUIRED
         company = self.env["res.company"]._company_default_get()
@@ -144,6 +148,15 @@ class SubscriptionRequest(models.Model):
                 sub_request.share_product_id.list_price
                 * sub_request.ordered_parts
             )
+
+    @api.multi
+    @api.depends(
+        "street_name", "street_number"
+    )
+    def _set_address(self):
+        for sub_request in self:
+            if sub_request.street_name and sub_request.street_number:
+                sub_request.address = sub_request.street_name + ", " + sub_request.street_number
 
     already_cooperator = fields.Boolean(
         string="I'm already cooperator",
@@ -254,8 +267,18 @@ class SubscriptionRequest(models.Model):
         states={"draft": [("readonly", False)]},
     )
     address = fields.Char(
+        compute="_set_address",
         string="Address",
-        required=True,
+        store=True,
+        states={"draft": [("readonly", False)]},
+    )
+    street_name = fields.Char(
+        string="Street name",
+        readonly=True,
+        states={"draft": [("readonly", False)]},
+    )
+    street_number = fields.Char(
+        string="House number",
         readonly=True,
         states={"draft": [("readonly", False)]},
     )
@@ -524,7 +547,7 @@ class SubscriptionRequest(models.Model):
                 account = accounts[0]
             else:
                 raise UserError(
-                    _("You must set a cooperator account on you company.")
+                    _("You must set a cooperator account on your company.")
                 )
         return account
 
